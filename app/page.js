@@ -1,11 +1,15 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
+import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className=" h-screen flex items-center justify-center flex-col gap-5">
-      <h1 className="text-5xl font-bold">This is a test</h1>
-      <Button className="">Hello 👋</Button>
-    </div>
-  );
+  useEffect(() => {
+    redirect("/dashboard");
+  }, []);
+
+  return <div></div>;
 }
