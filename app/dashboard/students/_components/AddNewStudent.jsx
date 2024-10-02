@@ -21,8 +21,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
+import GlobalApi from "@/app/_services/GlobalApi";
+import { useEffect, useState } from "react";
 
 const AddNewStudent = () => {
+  const [grades, setGrades] = useState([]);
   const {
     register,
     watch,
@@ -36,6 +39,16 @@ const AddNewStudent = () => {
   }
   const selectedGrade = watch("grade");
 
+  useEffect(() => {
+    GetAllGradesList();
+  }, []);
+
+  const GetAllGradesList = () => {
+    GlobalApi.GetAllGrades().then((res) => {
+      setGrades(res.data);
+    });
+  };
+
   return (
     <div>
       <Dialog>
@@ -45,6 +58,10 @@ const AddNewStudent = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add new student</DialogTitle>
+            {/* Dialog Description for accessibility */}
+            <DialogDescription>
+              Fill in the details below to add a new student.
+            </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -59,11 +76,14 @@ const AddNewStudent = () => {
                   className="col-span-3"
                   {...register("name", { required: true })}
                 />
+                {errors.name && (
+                  <p className="text-red-500">Name is required.</p>
+                )}
               </div>
 
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="grade" className="text-right">
-                  Select
+                  Select Grade
                 </Label>
                 <Select
                   value={selectedGrade}
@@ -74,12 +94,18 @@ const AddNewStudent = () => {
                     <SelectValue placeholder="Choose grade" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="5th">5th</SelectItem>
-                    <SelectItem value="6th">6th</SelectItem>
-                    <SelectItem value="7th">7th</SelectItem>
+                    {grades.map((item, index) => (
+                      <SelectItem value={item.grade} key={index}>
+                        {item.grade}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
+                {errors.grade && (
+                  <p className="text-red-500">Grade is required.</p>
+                )}
               </div>
+
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="phone" className="text-right">
                   Phone
@@ -92,6 +118,7 @@ const AddNewStudent = () => {
                   {...register("phone")}
                 />
               </div>
+
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="address" className="text-right">
                   Address
