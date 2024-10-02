@@ -1,24 +1,30 @@
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 
+let db; // Declare `db` as a top-level variable
+
+// Function to create a connection and assign it to `db`
 async function createDatabaseConnection() {
-  // Create a connection to the database
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    port: "3306",
-    user: "root",
-    password: "",
-    database: "attendancetrak",
-  });
+  try {
+    const connection = await mysql.createConnection({
+      host: "localhost",
+      port: "3306",
+      user: "root",
+      password: "",
+      database: "attendancetrak",
+    });
 
-  // Wrap the connection with drizzle
-  const db = drizzle(connection);
-  console.log("Database successfully connected ✅...");
-
-  return db;
+    // Wrap the connection with drizzle
+    db = drizzle(connection);
+    console.log("Database successfully connected ✅...");
+  } catch (error) {
+    console.error("Failed to connect to the database:", error);
+    throw error; // Ensure the error is rethrown so it can be handled downstream
+  }
 }
 
-// Export the database connection
-export const db = createDatabaseConnection().catch((err) => {
-  console.log("Failed to connect to the database:");
-});
+// Immediately invoke the connection function
+createDatabaseConnection();
+
+// Export the `db` after ensuring it's initialized
+export { db };
