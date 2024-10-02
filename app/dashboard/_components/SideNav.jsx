@@ -33,7 +33,13 @@ const SideNav = () => {
   return (
     <div className="border-r shadow-md h-screen p-5">
       <div className="w-full flex justify-center">
-        <Image src="/logo.svg" width={70} height={50} alt="logo" />
+        <Image
+          src="/logo.svg"
+          width={70}
+          height={70}
+          alt="logo"
+          priority={true}
+        />
       </div>
 
       <hr className="my-5" />
