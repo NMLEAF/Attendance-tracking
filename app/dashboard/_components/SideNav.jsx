@@ -1,6 +1,9 @@
+"use client";
+
 import { GraduationCap, Hand, LayoutIcon, Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const SideNav = () => {
   const menuList = [
@@ -30,6 +33,8 @@ const SideNav = () => {
     },
   ];
 
+  const path = usePathname();
+
   return (
     <div className="border-r shadow-md h-screen p-5">
       <div className="w-full flex justify-center">
@@ -46,7 +51,11 @@ const SideNav = () => {
 
       {menuList.map((menu, index) => (
         <Link href={menu.path} key={index}>
-          <h2 className="flex items-center text-md gap-3 p-4 text-slate-500 hover:bg-primary hover:text-white rounded-lg cursor-pointer my-2">
+          <h2
+            className={`flex items-center text-md gap-3 p-4 text-slate-500 hover:bg-primary hover:text-white rounded-lg cursor-pointer my-2 ${
+              path === menu.path ? "bg-primary text-white" : ""
+            }`}
+          >
             <menu.icon />
             {menu.name}
           </h2>
