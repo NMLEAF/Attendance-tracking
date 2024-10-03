@@ -23,19 +23,33 @@ import {
 import { useForm } from "react-hook-form";
 import GlobalApi from "@/app/_services/GlobalApi";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { LoaderIcon } from "lucide-react";
 
 const AddNewStudent = () => {
   const [grades, setGrades] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     watch,
+    reset,
     setValue,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
   function onSubmit(data) {
-    console.log(data);
+    setIsLoading(true);
+    GlobalApi.CreateNewStudent(data).then((res) => {
+      console.log("--", res);
+      if (res.data) {
+        reset();
+        toast("New student added");
+      } else {
+        toast("Failed to create a student");
+      }
+      setIsLoading(false);
+    });
   }
   const selectedGrade = watch("grade");
 
@@ -134,9 +148,15 @@ const AddNewStudent = () => {
 
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline" type="button">
+                  Cancel
+                </Button>
               </DialogClose>
-              <Button type="submit">Save</Button>
+              <DialogClose asChild>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? <LoaderIcon className="animate-spin" /> : "Save"}
+                </Button>
+              </DialogClose>
             </DialogFooter>
           </form>
         </DialogContent>
